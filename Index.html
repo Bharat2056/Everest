@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVEREST | See Beyond Ordinary</title>
+    
+    <!-- Google Fonts: Inter Tight & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3AA6FF',
+                        deep: '#0B3C5D',
+                        ice: '#EAF6FF',
+                        silver: '#C9D3DC',
+                    },
+                    fontFamily: {
+                        heading: ['"Inter Tight"', 'sans-serif'],
+                        body: ['"Inter"', 'sans-serif'],
+                    },
+                    transitionTimingFunction: {
+                        'lux': 'cubic-bezier(0.65, 0, 0.35, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAFA; color: #0B3C5D; overflow-x: hidden; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Inter Tight', sans-serif; }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Scrollbar Hidden */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Reveal Animations */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.95); transition: all 1.2s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+        /* Parallax Background Classes */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Hardware Accelerated Transform for JS Parallax */
+        .parallax-layer {
+            will-change: transform;
+        }
+
+        /* Image hover zooms */
+        .img-zoom-hover { transition: transform 0.8s ease; }
+        .group:hover .img-zoom-hover { transform: scale(1.05); }
+
+        /* Custom Input */
+        .lux-input {
+            width: 100%; border-bottom: 1px solid #C9D3DC; background: transparent; padding: 0.5rem 0;
+            transition: border-color 0.3s ease; outline: none;
+        }
+        .lux-input:focus { border-bottom-color: #3AA6FF; }
+
+        /* AI Loading Spinner */
+        .ai-spinner {
+            border: 3px solid rgba(58, 166, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #3AA6FF;
+            width: 24px;
+            height: 24px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Typing Indicator */
+        .typing-dot {
+            width: 6px; height: 6px; background: #C9D3DC; border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-primary selection:text-white">
+
+    <!-- 1. Announcement Bar -->
+    <div class="bg-deep text-white text-xs font-medium tracking-widest uppercase text-center py-2 z-50 relative">
+        Free UK & USA Shipping • 30-Day Returns
+    </div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-40 transition-all duration-500 py-4 px-6 md:px-12 flex justify-between items-center text-white mt-8 md:mt-8">
+        <!-- Logo -->
+        <div class="flex-1">
+            <a href="#" class="text-2xl font-heading font-light tracking-widest uppercase">Everest</a>
+        </div>
+        
+        <!-- Center Links -->
+        <div class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+            <a href="#" class="hover:text-primary transition-colors">Home</a>
+            <a href="#shop" class="hover:text-primary transition-colors">Shop</a>
+            <a href="#" class="hover:text-primary transition-colors">Men</a>
+            <a href="#" class="hover:text-primary transition-colors">Women</a>
+            <a href="#technology" class="hover:text-primary transition-colors">Technology</a>
+        </div>
+
+        <!-- Right Icons -->
+        <div class="flex-1 flex justify-end items-center space-x-6">
+            <button class="hover:text-primary transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </button>
+            <button id="account-toggle" class="hover:text-primary transition-colors hidden sm:block">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </button>
+            <button id="cart-toggle" class="relative hover:text-primary transition-colors group">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 2. Cinematic Hero Parallax -->
+    <header class="relative h-screen w-full flex items-center justify-center overflow-hidden parallax-bg" style="background-image: url('images/1 (1).png');">
+        <div class="absolute inset-0 bg-black/30 z-10 pointer-events-none"></div>
+        
+        <div class="relative z-20 text-center text-white px-4 parallax-layer" data-speed="-0.3">
+            <h1 class="text-6xl md:text-8xl font-heading font-extralight tracking-tighter mb-6 reveal active">
+                See Beyond<br><span class="font-normal italic">Ordinary.</span>
+            </h1>
+            <p class="text-lg md:text-xl font-light mb-10 max-w-lg mx-auto tracking-wide reveal active" style="transition-delay: 0.2s;">
+                Precision engineered eyewear. Crafted for the relentless pursuit of clarity.
+            </p>
+            <a href="#shop" class="inline-block bg-white text-deep px-10 py-4 text-sm tracking-widest uppercase font-medium hover:bg-primary hover:text-white transition-all duration-300 reveal active" style="transition-delay: 0.4s;">
+                Shop Collection
+            </a>
+        </div>
+    </header>
+
+    <!-- 3. Floating Product Introduction -->
+    <section class="py-32 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="mb-16 reveal parallax-layer" data-speed="0.1">
+                <h2 class="text-xs tracking-[0.3em] text-silver uppercase mb-4">The Pinnacle of Design</h2>
+                <p class="text-3xl md:text-5xl font-heading font-light max-w-3xl mx-auto leading-tight">
+                    Weightless titanium frames meet aerospace-grade optics.
+                </p>
+            </div>
+            <div class="relative w-full max-w-4xl mx-auto h-[60vh] flex items-center justify-center reveal-scale">
+                <div class="absolute inset-0 bg-ice rounded-full opacity-50 blur-3xl scale-75 parallax-layer" data-speed="-0.1"></div>
+                <!-- Scalable Floating Product Image -->
+                <img src="images/A_beautiful_mexican_girl_wearing_this_excat_sungla_delpmaspu (3).png" alt="Floating Glasses" class="relative z-10 w-full max-w-md object-contain drop-shadow-2xl mix-blend-multiply parallax-layer" data-speed="0.2">
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Brand Story Parallax -->
+    <section class="flex flex-col md:flex-row min-h-screen bg-deep text-white">
+        <div class="w-full md:w-1/2 p-12 md:p-24 flex flex-col justify-center relative z-10 reveal parallax-layer" data-speed="0.1">
+            <h3 class="text-xs tracking-[0.3em] text-primary uppercase mb-6">Heritage</h3>
+            <h2 class="text-4xl md:text-6xl font-heading font-light mb-8 leading-tight">Forged in the elements. <br>Refined for the city.</h2>
+            <p class="text-gray-300 text-lg font-light leading-relaxed mb-10">
+                Born from a desire to create the perfect lens for extreme altitudes, Everest has evolved into a symbol of uncompromising luxury. Every pair undergoes a 300-step hand-assembly process to ensure flawless clarity and durability.
+            </p>
+            <a href="#" class="border-b border-primary text-primary pb-1 w-max tracking-widest text-sm uppercase hover:text-white hover:border-white transition-colors">Discover Our Story</a>
+        </div>
+        <!-- Right side background attached image -->
+        <div class="w-full md:w-1/2 h-[50vh] md:h-auto parallax-bg" style="background-image: url('images/1 (12).png');">
+        </div>
+    </section>
+
+    <!-- 5. Category Cards -->
+    <section class="py-24 bg-white">
+        <div class="max-w-screen-2xl mx-auto px-4 md:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <a href="#shop" class="group relative h-96 overflow-hidden reveal parallax-layer" data-speed="0.05">
+                    <img src="https://images.unsplash.com/photo-1614715838608-dd527c46231d?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover img-zoom-hover" alt="Men">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <h3 class="text-2xl font-heading font-light tracking-wide">Men's</h3>
+                        <div class="h-[1px] w-0 bg-white mt-2 group-hover:w-full transition-all duration-500"></div>
+                    </div>
+                </a>
+                <a href="#shop" class="group relative h-96 overflow-hidden reveal parallax-layer" data-speed="0.1" style="transition-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover img-zoom-hover" alt="Women">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <h3 class="text-2xl font-heading font-light tracking-wide">Women's</h3>
+                        <div class="h-[1px] w-0 bg-white mt-2 group-hover:w-full transition-all duration-500"></div>
+                    </div>
+                </a>
+                <a href="#shop" class="group relative h-96 overflow-hidden reveal parallax-layer" data-speed="0.15" style="transition-delay: 0.2s;">
+                    <img src="https://images.unsplash.com/photo-1620138996831-2e68a7040543?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="absolute inset-0 w-full h-full object-cover img-zoom-hover" alt="Sport">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <h3 class="text-2xl font-heading font-light tracking-wide">Sport</h3>
+                        <div class="h-[1px] w-0 bg-white mt-2 group-hover:w-full transition-all duration-500"></div>
+                    </div>
+                </a>
+                <a href="#shop" class="group relative h-96 overflow-hidden reveal parallax-layer" data-speed="0.2" style="transition-delay: 0.3s;">
+                    <img src="https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover img-zoom-hover" alt="Lifestyle">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <h3 class="text-2xl font-heading font-light tracking-wide">Lifestyle</h3>
+                        <div class="h-[1px] w-0 bg-white mt-2 group-hover:w-full transition-all duration-500"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Product Grid with AI Feature -->
+    <section id="shop" class="py-24 bg-[#FAFAFA]">
+        <div class="max-w-screen-2xl mx-auto px-6 md:px-12">
+            
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-heading font-light mb-2">The Collection</h2>
+                    <p class="text-silver">Explore our defining silhouettes.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Grid Container -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-16">
+                <!-- Injected via JS -->
+            </div>
+            
+            <div class="mt-20 text-center reveal">
+                <button class="border border-deep text-deep px-12 py-4 text-sm tracking-widest uppercase hover:bg-deep hover:text-white transition-all duration-300">
+                    Load More
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Technology Section -->
+    <section id="technology" class="py-32 bg-ice relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl mix-blend-multiply parallax-layer" data-speed="0.3"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl parallax-layer" data-speed="-0.2"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-xs tracking-[0.3em] text-primary uppercase mb-4">Innovation</h2>
+                <h3 class="text-4xl md:text-5xl font-heading font-light">Engineered for the Extremes</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass p-10 rounded-2xl reveal shadow-lg hover:-translate-y-2 transition-transform duration-500 parallax-layer" data-speed="0.05">
+                    <svg class="w-10 h-10 text-primary mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <h4 class="text-xl font-heading mb-4">Polarized Vision</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">Advanced molecular anti-glare filters block 99.9% of reflected light.</p>
+                </div>
+                <!-- Extra tech cards omitted for brevity, keeping styling consistent -->
+                <div class="glass p-10 rounded-2xl reveal shadow-lg hover:-translate-y-2 transition-transform duration-500 parallax-layer" data-speed="0.1" style="transition-delay: 0.1s;">
+                    <svg class="w-10 h-10 text-primary mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <h4 class="text-xl font-heading mb-4">UV400 Protection</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">Complete spectrum defense. Our lenses block 100% of UVA, UVB, and UVC rays.</p>
+                </div>
+                <div class="glass p-10 rounded-2xl reveal shadow-lg hover:-translate-y-2 transition-transform duration-500 parallax-layer" data-speed="0.15" style="transition-delay: 0.2s;">
+                    <svg class="w-10 h-10 text-primary mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+                    <h4 class="text-xl font-heading mb-4">Ultra-Light Frames</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">Forged from aerospace-grade titanium. Practically weightless for all-day comfort.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. Premium Footer -->
+    <footer class="bg-deep text-white pt-24 pb-12">
+        <div class="max-w-screen-2xl mx-auto px-6 md:px-12">
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2026 Everest Sunglasses. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- INTERACTIVE COMPONENTS & MODALS            -->
+    <!-- ========================================== -->
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-[450px] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white z-10">
+            <h2 class="text-2xl font-heading font-light">Your Cart</h2>
+            <button id="close-cart" class="text-gray-400 hover:text-black transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-6">
+            <div class="text-center text-silver mt-10" id="empty-cart-msg">Your cart is empty.</div>
+        </div>
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-500">Subtotal</span>
+                <span id="cart-total" class="text-xl font-heading">$0.00</span>
+            </div>
+            <button id="checkout-btn" class="w-full bg-deep text-white py-4 text-sm tracking-widest uppercase hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Account Drawer -->
+    <div id="account-drawer" class="fixed inset-y-0 right-0 w-full md:w-[450px] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white z-10">
+            <h2 class="text-2xl font-heading font-light">My Account</h2>
+            <button id="close-account" class="text-gray-400 hover:text-black transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="p-8 space-y-6 flex-1 overflow-y-auto">
+            <h3 class="text-lg font-heading mb-4">Login</h3>
+            <form id="login-form" class="space-y-4">
+                <input type="email" placeholder="Email Address" class="lux-input" required>
+                <input type="password" placeholder="Password" class="lux-input" required>
+                <button type="submit" class="w-full bg-black text-white py-3 mt-4 hover:bg-primary transition-colors text-sm tracking-widest uppercase">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shared Overlay -->
+    <div id="shared-overlay" class="fixed inset-0 bg-black/40 z-40 hidden opacity-0 transition-opacity duration-500"></div>
+
+    <!-- Chat Widget -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <!-- Chat Icon -->
+        <button id="chat-toggle" class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-deep transition-colors hover:-translate-y-1 transform duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+        </button>
+        
+        <!-- Chat Panel -->
+        <div id="chat-panel" class="absolute bottom-20 right-0 w-80 bg-white rounded-2xl shadow-2xl overflow-hidden hidden flex-col opacity-0 transition-opacity duration-300 origin-bottom-right scale-95 transform border border-gray-100">
+            <div class="bg-deep text-white p-4 flex justify-between items-center">
+                <div>
+                    <h4 class="font-medium text-sm">Everest Support</h4>
+                    <p class="text-xs text-gray-300">Typically replies in minutes</p>
+                </div>
+                <button id="close-chat" class="text-gray-300 hover:text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="chat-messages" class="h-64 bg-gray-50 p-4 overflow-y-auto flex flex-col space-y-3 text-sm">
+                <div class="bg-white border border-gray-100 p-3 rounded-lg rounded-tl-none self-start shadow-sm max-w-[85%]">
+                    Hi! Welcome to Everest. How can we help you today?
+                </div>
+            </div>
+
+            <div class="p-3 bg-white border-t border-gray-100 flex items-center">
+                <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 text-sm outline-none px-2">
+                <button id="chat-send" class="text-primary hover:text-deep p-2 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- APPLICATION LOGIC                          -->
+    <!-- ========================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. PRODUCT DATA ---
+            const products = [
+                { id: 1, name: "Summit Aviator", price: 245, rating: 5, category: "Men", img: "images/WhatsApp Image 2026-02-17 at 10.08.20 PM.jpeg", colors: ['#000000', '#C9D3DC'], desc: "Classic aviator style, perfect for square or oval faces." },
+                { id: 2, name: "Altitude Polar", price: 285, rating: 4, category: "Sport", img: "images/WhatsApp Image 2026-02-17 at 10.08.21 PM (1).jpeg", colors: ['#0B3C5D'], desc: "Sporty, wrap-around polarized lenses for maximum glare protection." },
+                { id: 3, name: "Velocity Carbon", price: 345, rating: 5, category: "Men", img: "images/WhatsApp Image 2026-02-17 at 10.08.21 PM.jpeg", colors: ['#333333', '#111111'], desc: "Ultra-light carbon frame, modern rectangular design." },
+                { id: 4, name: "Horizon Gold", price: 390, rating: 5, category: "Women", img: "images/WhatsApp Image 2026-02-17 at 10.08.22 PM.jpeg", colors: ['#D4AF37', '#000000'], desc: "Elegant gold accents, oversized round frames for a luxurious look." },
+                { id: 5, name: "Glacier Shield", price: 310, rating: 4, category: "Sport", img: "images/WhatsApp Image 2026-02-17 at 10.08.23 PM (1).jpeg", colors: ['#FFFFFF', '#3AA6FF'], desc: "Snow-reflective lenses, ideal for extreme winter sports." },
+                { id: 6, name: "Urban Stealth", price: 210, rating: 4, category: "Lifestyle", img: "images/WhatsApp Image 2026-02-17 at 10.08.24 PM.jpeg", colors: ['#000000'], desc: "Minimalist all-black design for city life." },
+                { id: 7, name: "Aero Titanium", price: 295, rating: 5, category: "Men", img: "images/WhatsApp Image 2026-02-17 at 10.08.21 PM.jpeg", colors: ['#C9D3DC'], desc: "Featherweight titanium, rimless design." },
+                { id: 8, name: "Oasis Classic", price: 195, rating: 3, category: "Women", img: "images/WhatsApp Image 2026-02-17 at 10.08.24 PM.jpeg", colors: ['#8B4513', '#000000'], desc: "Vintage tortoise shell pattern, great for round faces." },
+                { id: 9, name: "Zenith Wayfarer", price: 220, rating: 5, category: "Lifestyle", img: "images/WhatsApp Image 2026-02-17 at 10.08.23 PM.jpeg", colors: ['#000000', '#A52A2A'], desc: "The timeless wayfarer shape, versatile for any outfit." },
+                { id: 10, name: "Nimbus Light", price: 260, rating: 4, category: "Women", img: "images/WhatsApp Image 2026-02-17 at 10.08.20 PM.jpeg", colors: ['#FFC0CB', '#FFFFFF'], desc: "Soft pastel frames, delicate and stylish." },
+            ];
+
+            // Render Product Grid
+            const grid = document.getElementById('product-grid');
+            function renderProductHTML(product) {
+                const stars = Array(5).fill(0).map((_, i) => 
+                    `<svg class="w-3 h-3 ${i < product.rating ? 'text-black' : 'text-gray-300'}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`
+                ).join('');
+                
+                const colorsHtml = product.colors.map(c => 
+                    `<span class="w-3 h-3 rounded-full border border-gray-300 shadow-sm" style="background-color: ${c}"></span>`
+                ).join('');
+
+                return `
+                    <div class="group cursor-pointer flex flex-col h-full bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 p-3 border border-gray-50" data-id="${product.id}">
+                        <div class="relative bg-gray-100 mb-4 overflow-hidden h-[250px] rounded-lg flex items-center justify-center">
+                            <img src="${product.img}" alt="${product.name}" loading="lazy" class="w-full h-full object-cover mix-blend-multiply img-zoom-hover">
+                        </div>
+                        <div class="flex justify-between items-start mb-2 px-1">
+                            <div>
+                                <h3 class="font-heading font-medium text-lg">${product.name}</h3>
+                                <p class="text-silver text-xs">${product.category}</p>
+                            </div>
+                            <span class="font-medium text-primary">$${product.price}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4 px-1">
+                            <div class="flex space-x-1">${stars}</div>
+                            <div class="flex space-x-1">${colorsHtml}</div>
+                        </div>
+                        <button class="mt-auto w-full bg-black text-white py-3 rounded-lg text-xs tracking-widest uppercase hover:bg-primary transition-colors add-to-cart-btn" data-id="${product.id}">
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+            }
+
+            products.forEach((product, index) => {
+                grid.insertAdjacentHTML('beforeend', `<div class="reveal" style="transition-delay: ${(index % 4) * 0.1}s;">${renderProductHTML(product)}</div>`);
+            });
+
+            // --- 2. DRAWER & CART LOGIC ---
+            const sharedOverlay = document.getElementById('shared-overlay');
+            let cart = { items: [], total: 0 };
+            const cartDrawer = document.getElementById('cart-drawer');
+            const cartCountEls = document.querySelectorAll('#cart-count');
+            const cartItemsEl = document.getElementById('cart-items');
+            const cartTotalEl = document.getElementById('cart-total');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            function openDrawer(drawer) {
+                drawer.classList.remove('translate-x-full');
+                sharedOverlay.classList.remove('hidden');
+                setTimeout(() => sharedOverlay.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeDrawers() {
+                cartDrawer.classList.add('translate-x-full');
+                document.getElementById('account-drawer').classList.add('translate-x-full');
+                sharedOverlay.classList.add('opacity-0');
+                setTimeout(() => sharedOverlay.classList.add('hidden'), 500);
+                document.body.style.overflow = '';
+            }
+
+            document.getElementById('cart-toggle').addEventListener('click', () => { closeDrawers(); setTimeout(()=> openDrawer(cartDrawer), 10); });
+            document.getElementById('close-cart').addEventListener('click', closeDrawers);
+            document.getElementById('account-toggle').addEventListener('click', () => { closeDrawers(); setTimeout(()=> openDrawer(document.getElementById('account-drawer')), 10); });
+            document.getElementById('close-account').addEventListener('click', closeDrawers);
+            sharedOverlay.addEventListener('click', closeDrawers);
+
+            function updateCartUI() {
+                const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+                cartCountEls.forEach(el => el.textContent = count);
+                cart.total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cartTotalEl.textContent = `$${cart.total.toFixed(2)}`;
+
+                if (cart.items.length === 0) {
+                    cartItemsEl.innerHTML = '';
+                    cartItemsEl.appendChild(emptyMsg);
+                    emptyMsg.style.display = 'block';
+                    checkoutBtn.disabled = true;
+                } else {
+                    emptyMsg.style.display = 'none';
+                    checkoutBtn.disabled = false;
+                    cartItemsEl.innerHTML = cart.items.map(item => `
+                        <div class="flex items-center space-x-4 bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
+                            <img src="${item.img}" class="w-16 h-16 object-cover bg-gray-50 rounded-md">
+                            <div class="flex-1">
+                                <h4 class="font-heading font-medium text-sm">${item.name}</h4>
+                                <p class="text-xs text-primary font-medium">$${item.price}</p>
+                                <div class="flex items-center space-x-3 mt-1">
+                                    <button class="text-gray-400 hover:text-black qty-btn" data-id="${item.id}" data-action="dec">-</button>
+                                    <span class="text-xs">${item.quantity}</span>
+                                    <button class="text-gray-400 hover:text-black qty-btn" data-id="${item.id}" data-action="inc">+</button>
+                                </div>
+                            </div>
+                            <button class="text-gray-300 hover:text-red-500 remove-btn pr-2" data-id="${item.id}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    `).join('');
+                }
+                attachCartListeners();
+            }
+
+            function addToCart(id) {
+                const product = products.find(p => p.id === id);
+                if (!product) return;
+                const existing = cart.items.find(item => item.id === id);
+                if (existing) existing.quantity += 1;
+                else cart.items.push({ ...product, quantity: 1 });
+                updateCartUI();
+                openDrawer(cartDrawer);
+            }
+
+            function attachCartListeners() {
+                document.querySelectorAll('.qty-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const item = cart.items.find(i => i.id === parseInt(e.target.dataset.id));
+                        if (e.target.dataset.action === 'inc') item.quantity++;
+                        if (e.target.dataset.action === 'dec' && item.quantity > 1) item.quantity--;
+                        updateCartUI();
+                    });
+                });
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        cart.items = cart.items.filter(i => i.id !== parseInt(e.currentTarget.dataset.id));
+                        updateCartUI();
+                    });
+                });
+            }
+
+            document.body.addEventListener('click', (e) => {
+                if (e.target.closest('.add-to-cart-btn')) addToCart(parseInt(e.target.closest('.add-to-cart-btn').dataset.id));
+            });
+
+            // --- 3. BASIC CHAT WIDGET ---
+            const chatPanel = document.getElementById('chat-panel');
+            const chatToggle = document.getElementById('chat-toggle');
+            const closeChat = document.getElementById('close-chat');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const chatMessages = document.getElementById('chat-messages');
+
+            function toggleChat() {
+                if (chatPanel.classList.contains('hidden')) {
+                    chatPanel.classList.remove('hidden');
+                    setTimeout(() => chatPanel.classList.remove('opacity-0', 'scale-95'), 10);
+                } else {
+                    chatPanel.classList.add('opacity-0', 'scale-95');
+                    setTimeout(() => chatPanel.classList.add('hidden'), 300);
+                }
+            }
+
+            chatToggle.addEventListener('click', toggleChat);
+            closeChat.addEventListener('click', toggleChat);
+
+            function addMessage(text, isUser = false) {
+                const msg = document.createElement('div');
+                msg.className = `p-3 rounded-lg text-sm shadow-sm max-w-[85%] ${isUser ? 'bg-primary text-white self-end rounded-tr-none' : 'bg-white border border-gray-100 self-start rounded-tl-none'}`;
+                msg.textContent = text;
+                chatMessages.appendChild(msg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function handleChatSend() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+                
+                addMessage(text, true);
+                chatInput.value = '';
+
+                // Simulate reply offline
+                setTimeout(() => {
+                    const responses = [
+                        "I can certainly help you with that. Are you looking for a specific frame shape?",
+                        "Our polarized lenses offer 99.9% glare reduction. Would you like to see our polarized collection?",
+                        "That's a great choice. Shipping usually takes 2-3 business days.",
+                        "Let me check the availability of that model for you..."
+                    ];
+                    const randomReply = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomReply, false);
+                }, 1000 + Math.random() * 1000);
+            }
+
+            chatSend.addEventListener('click', handleChatSend);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleChatSend();
+            });
+
+            // --- 4. SCROLL EFFECTS ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                if (scrollY > 50) {
+                    navbar.classList.add('bg-white', 'shadow-sm', 'py-3', 'text-black');
+                    navbar.classList.remove('py-4', 'text-white', 'mt-8', 'md:mt-8');
+                } else {
+                    navbar.classList.remove('bg-white', 'shadow-sm', 'py-3', 'text-black');
+                    navbar.classList.add('py-4', 'text-white', 'mt-8', 'md:mt-8');
+                }
+                
+                document.querySelectorAll('.parallax-layer').forEach(elem => {
+                    const speed = parseFloat(elem.getAttribute('data-speed')) || 0;
+                    const rect = elem.parentElement.getBoundingClientRect();
+                    const centerOffset = (window.innerHeight / 2) - (rect.top + rect.height / 2);
+                    elem.style.transform = `translate3d(0, ${centerOffset * speed * -1}px, 0)`;
+                });
+            });
+
+            // Scroll Reveal
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        });
+    </script>
+</body>
+</html>
